@@ -22,4 +22,17 @@ class UserTest extends TestCase
             'id' => $user->id
         ]);
     }
+
+    /**
+     * @test
+     */
+    public function _it_can_create_an_admin_user()
+    {
+        $this->signInAdminUser();
+
+        $this->assertTrue($this->user->hasRole('admin'));
+        $this->assertTrue($this->user->can('user edit'));
+        $this->assertTrue($this->user->can('user delete'));
+
+    }
 }
