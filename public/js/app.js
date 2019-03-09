@@ -1849,6 +1849,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -1860,7 +1865,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       section: 'overview',
-      title: 'Overview'
+      title: 'Overview',
+      loaded: false
     };
   },
   mounted: function mounted() {
@@ -1880,10 +1886,14 @@ __webpack_require__.r(__webpack_exports__);
     events.$on('changeSection', function (section) {
       _this.changeSection(section);
     });
+    events.$on('loaded', function () {
+      _this.loaded = true;
+    });
   },
   methods: {
     changeSection: function changeSection(section) {
       this.section = section.section;
+      this.loaded = false;
       this.title = section.section.toString().replace('-', ' ');
       events.$emit('setSection', {
         section: section
@@ -2027,7 +2037,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mounted: function mounted() {
+    events.$emit('loaded');
+  }
+});
 
 /***/ }),
 
@@ -2044,7 +2058,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      users: {}
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get('/admin/users').then(function (response) {
+      _this.users = response.data;
+      events.$emit('loaded');
+    }).catch(function (error) {
+      console.error(error);
+    });
+  }
+});
 
 /***/ }),
 
@@ -37150,16 +37184,51 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "card-body" },
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.loaded,
+                  expression: "loaded"
+                }
+              ],
+              staticClass: "card-body"
+            },
             [_c(_vm.section, { tag: "component" })],
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.loaded,
+                  expression: "!loaded"
+                }
+              ],
+              staticClass: "col-12"
+            },
+            [_vm._m(0)]
           )
         ])
       ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-2 offset-5 loading-box" }, [
+      _c("div", { staticClass: "loading" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -37290,7 +37359,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("h1", [_vm._v("Users")])
+  return _c("div", [
+    _c(
+      "ul",
+      _vm._l(_vm.users, function(user) {
+        return _c("li", [_vm._v(_vm._s(user.name))])
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -49478,11 +49555,16 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 var token = document.head.querySelector('meta[name="csrf-token"]');
+var api_token = document.head.querySelector('meta[name="api-token"');
 
 if (token) {
   window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+
+if (api_token) {
+  window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + api_token.content;
 }
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

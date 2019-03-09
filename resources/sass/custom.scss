@@ -1,0 +1,9 @@
+.loading-box{
+  text-align: center;
+  height: 100px;
+  padding:40px;
+
+  .loading{
+    @include spinner();
+  }
+}

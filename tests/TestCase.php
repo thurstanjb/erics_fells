@@ -40,8 +40,9 @@ abstract class TestCase extends BaseTestCase
         $user_create = createLp(Permission::class, ['name' => 'user create']);
         $user_edit = createLp(Permission::class, ['name' => 'user edit']);
         $user_delete = createLp(Permission::class, ['name' => 'user delete']);
+        $access_user = createLp(Permission::class, ['name' => 'access user']);
 
-        $role->givePermissionTo([$user_view, $user_create, $user_edit, $user_delete]);
+        $role->givePermissionTo([$user_view, $user_create, $user_edit, $user_delete, $access_user]);
 
 
         $this->user->assignRole($role);

@@ -10655,6 +10655,86 @@ a.text-dark:focus {
   }
 }
 
+/*
+================================================================================
+SPINNERS
+================================================================================
+A Sass mixin to generate a pure CSS3 loading/busy indicator.
+https://github.com/franzheidl/spinners
+Franz Heidl 2014
+MIT License
+--------------------------------------------------------------------------------
+USAGE
+
+Default:
+
+.my-spinner {
+ @include spinner();
+}
+
+
+Custom:
+
+.my-spinner {
+ @include spinner(1.25em, 3px solid #555, .7s, background rgba(0, 0, 0, .2);
+}
+
+All arguments are optional.
+
+Acceppts any valid CSS dimensional declaration, e.g px, em, rem as an argument for size.
+
+Use either shorthand border declarations or individual 'border-[property] [value]' (no colon!) pairs for the style.
+
+Pass any number of seconds referring to the duration of one full rotation for animation speed.
+
+--------------------------------------------------------------------------------
+*/
+
+@-webkit-keyframes spinner-animation {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-animation {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+.loading-box {
+  text-align: center;
+  height: 100px;
+  padding: 40px;
+}
+
+.loading-box .loading {
+  background-color: transparent;
+  border: 3px solid #1277c2;
+  border-radius: 50%;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: middle;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-animation: spinner-animation 0.65s infinite linear;
+  animation: spinner-animation 0.65s infinite linear;
+}
+
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);

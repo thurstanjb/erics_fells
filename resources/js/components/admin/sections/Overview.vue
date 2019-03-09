@@ -5,5 +5,8 @@
 <script>
     export default {
 
+      mounted(){
+        events.$emit('loaded');
+      }
     }
 </script>

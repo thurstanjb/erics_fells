@@ -9,8 +9,13 @@
                     <div class="card-header text-capitalize">{{title}}
                         <action-button :type="section" class="float-right"></action-button></div>
 
-                    <div class="card-body">
+                    <div class="card-body" v-show="loaded">
                         <component :is="section"></component>
+                    </div>
+                    <div class="col-12" v-show="!loaded">
+                        <div class="col-2 offset-5 loading-box">
+                            <div class="loading"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -33,7 +38,8 @@
       data(){
           return {
             section: 'overview',
-            title: 'Overview'
+            title: 'Overview',
+            loaded: false
         }
       },
 
@@ -50,12 +56,16 @@
         });
         events.$on('changeSection', (section) => {
           this.changeSection(section);
-        })
+        });
+        events.$on('loaded', () => {
+          this.loaded = true
+        });
       },
 
       methods:{
           changeSection(section){
             this.section = section.section;
+            this.loaded = false;
             this.title = section.section.toString().replace('-', ' ');
 
             events.$emit('setSection', {section: section});
